@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 import { processPayment } from '../services/paymentService';
 import { validateCardNumber, validateCardExpiry, validateCVV, validateAmount } from '../utils/validation';
 
@@ -9,7 +9,7 @@ function PaymentForm() {
   const [cvv, setCvv] = useState('');
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,10 +33,10 @@ function PaymentForm() {
 
     try {
       const result = await processPayment({ cardNumber, expiryDate, cvv, amount });
-      history.push('/success', { data: result });
+      navigate('/success', { state: { data: result } });
     } catch (error) {
       setError(error.message);
-      history.push('/failure', { reason: error.message });
+      navigate('/failure', { state: { reason: error.message } });
     }
   };
 

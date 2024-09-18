@@ -1,11 +1,11 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate  } from 'react-router-dom';
 
 function TransactionHistory({ transactions }) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const viewDetails = (id) => {
-    history.push(`/history/${id}`);
+    navigate(`/history/${id}`);
   };
 
   return (

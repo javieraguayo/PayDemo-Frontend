@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PaymentPage from './pages/PaymentPage';
 import FailurePage from './pages/FailurePage';
 import SuccessPage from './pages/SuccessPage';
@@ -9,14 +9,14 @@ import ErrorPage from './components/ErrorPage';
 function App() {
   return (
     <Router>
-      <Switch>
-        <Route path="/" exact component={PaymentPage} />
-        <Route path="/success" component={SuccessPage} />
-        <Route path="/failure" component={FailurePage} />
-        <Route path="/history" exact component={HistoryPage} />
-        <Route path="/history/:id" component={ErrorPage} />
-        <Route component={ErrorPage} />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<PaymentPage />} />
+        <Route path="/success" element={<SuccessPage />} />
+        <Route path="/failure" element={<FailurePage />} />
+        <Route path="/history" element={<HistoryPage />} />
+        <Route path="/history/:id" element={<ErrorPage />} />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
     </Router>
   );
 }

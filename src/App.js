@@ -5,15 +5,18 @@ import FailurePage from './pages/FailurePage';
 import SuccessPage from './pages/SuccessPage';
 import HistoryPage from './pages/HistoryPage';
 import ErrorPage from './components/ErrorPage';
+import LoginForm from './components/LoginForm';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<PaymentPage />} />
+        <Route path="/" element={<LoginForm />} />
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/failure" element={<FailurePage />} />
         <Route path="/history" element={<HistoryPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/login" element={<LoginForm />} />
         <Route path="/history/:id" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>

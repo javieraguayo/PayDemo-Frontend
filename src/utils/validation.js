@@ -2,13 +2,16 @@ export function validateCardNumber(number) {
     const regex = /^[0-9]{16}$/;
     return regex.test(number) && luhnCheck(number);
   }
-  
+
   export function validateCardExpiry(expiryDate) {
     const [month, year] = expiryDate.split('/');
-    const expiry = new Date(`${year}-${month}-01`);
+    const fullYear = parseInt(year, 10) + (parseInt(year, 10) < 50 ? 2000 : 1900);
+    const expiry = new Date(`${fullYear}-${month}-01`);
     const now = new Date();
-    return expiry > now;
+  
+    return expiry > now && month >= 1 && month <= 12;
   }
+  
   
   export function validateCVV(cvv) {
     const regex = /^[0-9]{3}$/;

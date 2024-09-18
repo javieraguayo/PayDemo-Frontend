@@ -4,6 +4,7 @@ import { processPayment } from '../services/paymentService';
 import { validateCardNumber, validateCardExpiry, validateCVV, validateAmount } from '../utils/validation';
 
 function PaymentForm() {
+  const [fullName, setFullName] = useState('');  // Nuevo estado para el nombre completo
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -15,7 +16,7 @@ function PaymentForm() {
     e.preventDefault();
     
     // Verificar campos vacíos
-    if (!cardNumber || !expiryDate || !cvv || !amount) {
+    if (!fullName || !cardNumber || !expiryDate || !cvv || !amount) {
       setError('Todos los campos son obligatorios');
       return;
     }
@@ -43,7 +44,7 @@ function PaymentForm() {
     }
   
     try {
-      const result = await processPayment({ cardNumber, expiryDate, cvv, amount });
+      const result = await processPayment({ fullName, cardNumber, expiryDate, cvv, amount });
       navigate('/success', { state: { data: result } });
     } catch (error) {
       setError(error.message);
@@ -54,6 +55,14 @@ function PaymentForm() {
   
   return (
     <form onSubmit={handleSubmit}>
+      <div>
+        <label> Nombre Completo:</label>
+        <input 
+          type="text" 
+          value={fullName} 
+          onChange={(e) => setFullName(e.target.value)} 
+        />
+      </div>
       <div>
         <label> Número de Tarjeta:</label>
         <input 

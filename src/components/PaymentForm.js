@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { processPayment } from '../services/paymentService';
 import { validateCardNumber, validateCardExpiry, validateCVV, validateAmount } from '../utils/validation';
 
@@ -14,12 +14,15 @@ function PaymentForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validateCardNumber(cardNumber)) {
-      setError('Número de tarjeta inválido');
+    // Verificar campos vacíos
+    if (!cardNumber || !expiryDate || !cvv || !amount) {
+      setError('Todos los campos son obligatorios');
       return;
     }
-    if (!validateCardExpiry(expiryDate)) {
-      setError('Fecha de expiración inválida');
+    
+    // Validaciones individuales
+    if (!validateCardNumber(cardNumber)) {
+      setError('Número de tarjeta inválido');
       return;
     }
     if (!validateCVV(cvv)) {
@@ -27,10 +30,15 @@ function PaymentForm() {
       return;
     }
     
-    // Redirigir a transacción fallida si el monto es menor o igual a 5000
-    if (validateAmount(amount)) {
-      setError('Monto debe ser mayor a 5000');
-      navigate('/failure', { state: { reason: 'El monto debe ser mayor a 5000' } });
+    // Validación del monto
+    if (!validateAmount(amount)) {
+      navigate('/failure', { state: { reason: 'Monto debe ser mayor a 5000' } });
+      return;
+    }
+  
+    // Validación de la fecha de expiración
+    if (!validateCardExpiry(expiryDate)) {
+      navigate('/failure', { state: { reason: 'Fecha de expiración inválida' } });
       return;
     }
   
@@ -42,7 +50,8 @@ function PaymentForm() {
       navigate('/failure', { state: { reason: error.message } });
     }
   };
-
+  
+  
   return (
     <form onSubmit={handleSubmit}>
       <div>

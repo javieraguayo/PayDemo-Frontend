@@ -1,17 +1,21 @@
-export function validateCardNumber(number) {
+  export function validateCardNumber(number) {
     const regex = /^[0-9]{16}$/;
     return regex.test(number) && luhnCheck(number);
   }
 
   export function validateCardExpiry(expiryDate) {
     const [month, year] = expiryDate.split('/');
+    
+    if (!month || !year || month < 1 || month > 12 || year.length !== 2) {
+      return false;
+    }
+    
     const fullYear = parseInt(year, 10) + (parseInt(year, 10) < 50 ? 2000 : 1900);
-    const expiry = new Date(`${fullYear}-${month}-01`);
+    const expiry = new Date(fullYear, month - 1); // El mes es 0-indexado en JavaScript
     const now = new Date();
-  
-    return expiry > now && month >= 1 && month <= 12;
+    
+    return expiry >= now;
   }
-  
   
   export function validateCVV(cvv) {
     const regex = /^[0-9]{3}$/;
@@ -19,7 +23,7 @@ export function validateCardNumber(number) {
   }
   
   export function validateAmount(amount) {
-    return parseFloat(amount) <= 5000;
+    return parseFloat(amount) > 5000;
   }
   
   function luhnCheck(value) {

@@ -19,7 +19,7 @@ export function validateCardNumber(number) {
   }
   
   export function validateAmount(amount) {
-    return parseFloat(amount) > 5000;
+    return parseFloat(amount) <= 5000;
   }
   
   function luhnCheck(value) {

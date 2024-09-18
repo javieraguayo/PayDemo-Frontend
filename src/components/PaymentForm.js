@@ -26,11 +26,14 @@ function PaymentForm() {
       setError('CVV inválido');
       return;
     }
-    if (!validateAmount(amount)) {
+    
+    // Redirigir a transacción fallida si el monto es menor o igual a 5000
+    if (validateAmount(amount)) {
       setError('Monto debe ser mayor a 5000');
+      navigate('/failure', { state: { reason: 'El monto debe ser mayor a 5000' } });
       return;
     }
-
+  
     try {
       const result = await processPayment({ cardNumber, expiryDate, cvv, amount });
       navigate('/success', { state: { data: result } });

@@ -85,6 +85,14 @@ function LoginForm() {
           >
             Iniciar Sesión
           </button>
+          <p className="mt-4 text-center">
+          <span className="text-gray-600">
+            ¿No tienes una cuenta?{' '}
+          </span>
+          <a href="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
+            Regístrate aquí
+          </a>
+        </p>
         </form>
       </div>
     </div>

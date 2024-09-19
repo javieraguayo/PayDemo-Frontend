@@ -5,17 +5,17 @@ export default function NavigationBar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { name: 'Inicio', icon: Home, href: '/' },
-    { name: 'Pagar', icon: CreditCardIcon, href: '/pagar' },
+    { name: 'Inicio', icon: Home, href: '/home' },
+    { name: 'Pagar', icon: CreditCardIcon, href: '/payment' },
     { name: 'Historial', icon: History, href: '/historial' },
   ];
 
   return (
-    <nav className="bg-gray-100 text-gray-800 shadow-md">
+    <nav className="bg-gradient-to-r from-white to-indigo-200 text-gray-800 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <a href="/" className="flex items-center space-x-3 bg-gradient-to-r from-gray-50 to-gray-100 p-2 rounded-lg">
+            <a href="/home" className="flex items-center space-x-3 bg-gradient-to-r from-gray-50 to-gray-100 p-2 rounded-lg">
               <div className="relative">
                 <CreditCardIcon className="h-8 w-8 text-indigo-600" />
                 <div className="absolute -top-1 -right-1 h-2 w-2 bg-indigo-400 rounded-full animate-pulse" />
@@ -34,14 +34,14 @@ export default function NavigationBar() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition duration-150 ease-in-out"
+                  className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-indigo-300 hover:text-white transition duration-150 ease-in-out"
                 >
                   <item.icon className="w-5 h-5 mr-2" />
                   {item.name}
                 </a>
               ))}
               <button
-                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition duration-150 ease-in-out"
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-white bg-blue-400 hover:bg-blue-500 transition duration-150 ease-in-out"
                 onClick={() => console.log('Cerrar sesión')}
               >
                 <LogOut className="w-5 h-5 mr-2" />
@@ -66,28 +66,25 @@ export default function NavigationBar() {
 
       {/* Mobile menu */}
       <div className={`md:hidden ${isOpen ? 'block' : 'hidden'}`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gradient-to-r from-white to-indigo-200"> {/* Fondo degradado */}
           {navItems.map((item) => (
             <a
               key={item.name}
               href={item.href}
-              className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition duration-150 ease-in-out"
+              className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-indigo-300 hover:text-white transition duration-150 ease-in-out"
               onClick={() => setIsOpen(false)}
             >
               <item.icon className="w-5 h-5 mr-3" />
               {item.name}
             </a>
           ))}
-          <button
-            className="w-full flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition duration-150 ease-in-out"
-            onClick={() => {
-              console.log('Cerrar sesión');
-              setIsOpen(false);
-            }}
+          <span
+            className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 cursor-pointer hover:bg-indigo-300 hover:text-white transition duration-150 ease-in-out"
+            onClick={() => console.log('Cerrar sesión')}
           >
             <LogOut className="w-5 h-5 mr-3" />
             Cerrar sesión
-          </button>
+          </span>
         </div>
       </div>
     </nav>

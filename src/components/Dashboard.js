@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CreditCard, History, DollarSign, CheckCircle, TrendingUp, PieChart, AlertTriangle, ArrowRightLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
   const [lastTransaction, setLastTransaction] = useState({
@@ -48,18 +49,20 @@ export default function Dashboard() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <div className="p-5">
-                <div className="flex items-center">
-                  <CreditCard className="h-8 w-8 text-indigo-600" aria-hidden="true" />
-                  <div className="ml-5 w-0 flex-1">
-                    <h2 className="text-xl font-semibold text-gray-900 truncate">Simular Pago</h2>
-                    <p className="mt-1 text-sm text-gray-600">Prueba una nueva transacción</p>
+              <Link to="/payment" className="block h-full">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <CreditCard className="h-8 w-8 text-indigo-600" aria-hidden="true" />
+                    <div className="ml-5 w-0 flex-1">
+                      <h2 className="text-xl font-semibold text-gray-900 truncate">Simular Pago</h2>
+                      <p className="mt-1 text-sm text-gray-600">Prueba una nueva transacción</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="bg-indigo-50 px-5 py-3">
-                <div className="text-sm font-medium text-indigo-700">Iniciar simulación →</div>
-              </div>
+                <div className="bg-indigo-50 px-5 py-3">
+                  <div className="text-sm font-medium text-indigo-700">Iniciar simulación →</div>
+                </div>
+              </Link>
             </motion.div>
 
             {/* Tarjeta de Historial de Transacciones */}
@@ -72,18 +75,20 @@ export default function Dashboard() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <div className="p-5">
-                <div className="flex items-center">
-                  <History className="h-8 w-8 text-green-600" aria-hidden="true" />
-                  <div className="ml-5 w-0 flex-1">
-                    <h2 className="text-xl font-semibold text-gray-900 truncate">Historial</h2>
-                    <p className="mt-1 text-sm text-gray-600">Ver tus transacciones pasadas</p>
+              <Link to="/historial" className="block h-full">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <History className="h-8 w-8 text-green-600" aria-hidden="true" />
+                    <div className="ml-5 w-0 flex-1">
+                      <h2 className="text-xl font-semibold text-gray-900 truncate">Historial</h2>
+                      <p className="mt-1 text-sm text-gray-600">Ver tus transacciones pasadas</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="bg-green-50 px-5 py-3">
-                <div className="text-sm font-medium text-green-700">Ver historial completo →</div>
-              </div>
+                <div className="bg-green-50 px-5 py-3">
+                  <div className="text-sm font-medium text-green-700">Ver historial completo →</div>
+                </div>
+              </Link>
             </motion.div>
 
             {/* Tarjeta de Última Transacción */}
@@ -162,8 +167,8 @@ export default function Dashboard() {
               </div>
             </motion.div>
 
-             {/* Transacciones Exitosas y Fallidas */}
-             <motion.div 
+            {/* Transacciones Exitosas y Fallidas */}
+            <motion.div 
               className="bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 p-5 relative"
               variants={cardVariants}
               initial="hidden"
@@ -171,19 +176,19 @@ export default function Dashboard() {
               transition={{ duration: 0.3, delay: 0.5 }}
             >
               <div className="flex items-center mb-4">
-                <ArrowRightLeft className="h-8 w-8 text-yellow-600" aria-hidden="true" />
+                <ArrowRightLeft className="h-8 w-8 text-green-600" aria-hidden="true" />
                 <div className="ml-5 w-0 flex-1">
                   <h2 className="text-xl font-semibold text-gray-900">Transacciones</h2>
                 </div>
               </div>
               <div className="flex justify-around mt-2">
                 <div className="text-center">
-                  <span className="text-green-600 font-bold text-2xl">{successfulTransactions}</span>
-                  <p className="text-sm text-gray-500">Exitosas</p>
+                  <span className="text-green-600 font-bold text-2xl">{loading ? <span className="animate-pulse bg-gray-200 h-8 w-12 rounded"></span> : successfulTransactions}</span>
+                  <span className="block text-sm text-gray-600">Exitosas</span>
                 </div>
                 <div className="text-center">
-                  <span className="text-red-600 font-bold text-2xl">{failedTransactions}</span>
-                  <p className="text-sm text-gray-500">Fallidas</p>
+                  <span className="text-red-600 font-bold text-2xl">{loading ? <span className="animate-pulse bg-gray-200 h-8 w-12 rounded"></span> : failedTransactions}</span>
+                  <span className="block text-sm text-gray-600">Fallidas</span>
                 </div>
               </div>
             </motion.div>

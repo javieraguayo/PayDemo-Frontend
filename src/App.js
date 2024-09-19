@@ -6,6 +6,7 @@ import SuccessPage from './pages/SuccessPage';
 import HistoryPage from './pages/HistoryPage';
 import ErrorPage from './components/ErrorPage';
 import LoginForm from './components/LoginForm';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/history/:id" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>

@@ -75,7 +75,7 @@ export default function Dashboard() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Link to="/historial" className="block h-full">
+              <Link to="/history" className="block h-full">
                 <div className="p-5">
                   <div className="flex items-center">
                     <History className="h-8 w-8 text-green-600" aria-hidden="true" />

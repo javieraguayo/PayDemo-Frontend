@@ -9,7 +9,7 @@ export default function NavigationBar() {
   const navItems = [
     { name: 'Inicio', icon: Home, href: '/home' },
     { name: 'Pagar', icon: CreditCardIcon, href: '/payment' },
-    { name: 'Historial', icon: History, href: '/historial' },
+    { name: 'Historial', icon: History, href: '/history' },
   ];
 
   const handleLogout = () => {

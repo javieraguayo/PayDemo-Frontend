@@ -5,6 +5,7 @@ import { getTransactionHistory } from '../services/transactionService';
 function HistoryPage() {
   const [transactions, setTransactions] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);  // Indicador de carga
 
   useEffect(() => {
     async function fetchTransactions() {
@@ -13,6 +14,8 @@ function HistoryPage() {
         setTransactions(data);
       } catch (error) {
         setError('Error al obtener el historial de transacciones.');
+      } finally {
+        setLoading(false);  // Terminar la carga
       }
     }
 
@@ -20,10 +23,20 @@ function HistoryPage() {
   }, []);
 
   return (
-    <div>
-      <h1>Historial de Transacciones</h1>
-      {error && <p>{error}</p>}
-      <TransactionHistory transactions={transactions} />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-3xl p-6 bg-white rounded-lg shadow-md">
+        <h1 className="text-2xl font-semibold text-center mb-6">Historial de Transacciones</h1>
+        
+        {loading ? (
+          <p className="text-center text-gray-600">Cargando...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">{error}</p>
+        ) : transactions.length > 0 ? (
+          <TransactionHistory transactions={transactions} />
+        ) : (
+          <p className="text-center text-gray-500">No se encontraron transacciones.</p>
+        )}
+      </div>
     </div>
   );
 }

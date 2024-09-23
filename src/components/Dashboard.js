@@ -31,7 +31,7 @@ export default function Dashboard() {
         const lastTxn = data.sort((a, b) => new Date(b.date) - new Date(a.date))[0];
 
         setTotalTransactions(total);
-        setAverageTransaction(average.toFixed(0));
+        setAverageTransaction(Math.round(average));  // Redondear promedio
         setSuccessfulTransactions(successful.length);
         setFailedTransactions(failed.length);
         setLastTransaction(lastTxn);
@@ -45,15 +45,13 @@ export default function Dashboard() {
     fetchTransactions();
   }, []);
 
+  const formatAmount = (amount) => {
+    return parseInt(amount).toLocaleString('es-CL');
+  };
+
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
-  };
-
-  const formatLastTransactionDate = (date) => {
-    if (!date) return '';
-    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    return new Date(date).toLocaleDateString('es-ES', options);
   };
 
   return (
@@ -128,31 +126,38 @@ export default function Dashboard() {
                   <DollarSign className="h-8 w-8 text-blue-600" aria-hidden="true" />
                   <div className="ml-5 w-0 flex-1">
                     <h2 className="text-xl font-semibold text-gray-900 truncate">Última Transacción</h2>
-                    <p className="mt-1 text-2xl font-bold text-gray-900">
-                      ${lastTransaction?.amount?.toLocaleString()} CLP
-                    </p>
+                    {lastTransaction ? (
+                      <p className="mt-1 text-2xl font-bold text-gray-900">${formatAmount(lastTransaction.amount)} CLP</p>
+                    ) : (
+                      <p className="mt-1 text-2xl font-bold text-gray-900">No disponible</p>
+                    )}
                   </div>
                 </div>
               </div>
-              <div className="bg-blue-50 px-5 py-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-blue-700">
-                    {formatLastTransactionDate(lastTransaction?.date)}
-                  </span>
-                  {lastTransaction?.status === 'exitosa' ? (
-                    <div className="flex items-center text-green-700">
-                      <CheckCircle className="h-5 w-5 mr-1" />
-                      <span className="text-sm font-medium">Exitosa</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center text-red-700">
-                      <AlertTriangle className="h-5 w-5 mr-1" />
-                      <span className="text-sm font-medium">Fallida</span>
-                    </div>
-                  )}
-                </div>
+              <div className="bg-blue-50 px-5 py-3 flex justify-between items-center">
+                {lastTransaction ? (
+                  <>
+                    <span className="text-sm font-medium text-blue-700">{new Date(lastTransaction.date).toLocaleDateString('es-CL')}</span>
+                    {lastTransaction.status === 'exitosa' ? (
+                      <div className="flex items-center text-green-700">
+                        <CheckCircle className="h-5 w-5 mr-1" />
+                        <span className="text-sm font-medium">Exitosa</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center text-red-700">
+                        <AlertTriangle className="h-5 w-5 mr-1" />
+                        <span className="text-sm font-medium">Fallida</span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-sm font-medium text-gray-500">Sin transacciones recientes</span>
+                )}
               </div>
             </motion.div>
+
+
+
           </div>
 
           {/* Estadísticas Rápidas */}
@@ -191,7 +196,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="text-2xl font-bold text-gray-900 mt-2 text-center">
-                {loading ? <span className="animate-pulse bg-gray-200 h-8 w-24 rounded"></span> : `$${averageTransaction.toLocaleString()} CLP`}
+                {loading ? <span className="animate-pulse bg-gray-200 h-8 w-24 rounded"></span> : `$${formatAmount(averageTransaction)} CLP`}
               </div>
             </motion.div>
 

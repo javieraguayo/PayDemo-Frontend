@@ -1,14 +1,21 @@
 import { useState } from 'react';
 import { Home, CreditCard as CreditCardIcon, History, LogOut, Menu, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';  // Importar useNavigate para redirigir al usuario
 
 export default function NavigationBar() {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const navItems = [
     { name: 'Inicio', icon: Home, href: '/home' },
     { name: 'Pagar', icon: CreditCardIcon, href: '/payment' },
     { name: 'Historial', icon: History, href: '/historial' },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   return (
     <nav className="bg-gradient-to-r from-white to-indigo-200 text-gray-800 shadow-md">
@@ -42,7 +49,7 @@ export default function NavigationBar() {
               ))}
               <button
                 className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-white bg-blue-400 hover:bg-blue-500 transition duration-150 ease-in-out"
-                onClick={() => console.log('Cerrar sesión')}
+                onClick={handleLogout}
               >
                 <LogOut className="w-5 h-5 mr-2" />
                 Cerrar sesión
@@ -80,7 +87,7 @@ export default function NavigationBar() {
           ))}
           <span
             className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 cursor-pointer hover:bg-indigo-300 hover:text-white transition duration-150 ease-in-out"
-            onClick={() => console.log('Cerrar sesión')}
+            onClick={handleLogout}
           >
             <LogOut className="w-5 h-5 mr-3" />
             Cerrar sesión

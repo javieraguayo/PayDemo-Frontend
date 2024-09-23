@@ -3,11 +3,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import PaymentPage from './pages/PaymentPage';
-import FailurePage from './pages/FailurePage';  // Asegúrate de que esté importado
+import FailurePage from './pages/FailurePage';
 import SuccessPage from './pages/SuccessPage';
 import HistoryPage from './pages/HistoryPage';
 import LoginForm from './components/LoginForm';
 import HomePage from './pages/HomePage';
+import RegisterForm from './components/RegisterForm';  // Importar la página de registro
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />  {/* Nueva ruta para registro */}
 
           {/* Rutas protegidas */}
           <Route

@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { UserIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [serverError, setServerError] = useState(''); // Para manejar errores del servidor
-  const navigate = useNavigate();  // Hook de navegación
 
   const validateForm = () => {
     const newErrors = { email: '', password: '' };
@@ -50,9 +48,8 @@ function LoginForm() {
 
         if (response.ok) {
           console.log('Inicio de sesión exitoso:', data);
-          // Guardar el token JWT en el almacenamiento local o en el estado de la app
           localStorage.setItem('token', data.token);
-          navigate('/home');  // Aquí redirigimos al usuario a la página /home
+          window.location.replace('/home'); 
         } else {
           setServerError(data.message || 'Error de autenticación');
         }

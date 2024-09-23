@@ -4,11 +4,10 @@ import { processPayment } from '../services/paymentService';
 import { validateCardNumber, validateCardExpiry, validateCVV, validateAmount } from '../utils/validation';
 import { User, CreditCard, Calendar, Lock, DollarSign } from 'lucide-react';
 
-
 function PaymentForm() {
-  const [name, setFullName] = useState('');  // Nuevo estado para el nombre completo
+  const [name, setFullName] = useState('');  
   const [cardNumber, setCardNumber] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
+  const [expirationDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
@@ -17,7 +16,7 @@ function PaymentForm() {
   // Función para manejar transacciones fallidas
   const handleFailedTransaction = async (reason) => {
     try {
-      await processPayment({ name, cardNumber, expiryDate, cvv, amount });
+      await processPayment({ name, cardNumber, expirationDate, cvv, amount });
       navigate('/failure', { state: { reason } });
     } catch (error) {
       console.error('Error al registrar la transacción fallida: ', error);
@@ -29,10 +28,12 @@ function PaymentForm() {
     e.preventDefault();
 
     // Verificar campos vacíos
-    if (!name || !cardNumber || !expiryDate || !cvv || !amount) {
+    if (!name || !cardNumber || !expirationDate || !cvv || !amount) {
       setError('Todos los campos son obligatorios');
       return;
     }
+
+    console.log('Datos enviados al backend:', { name, cardNumber, expirationDate, cvv, amount });
 
     // Validación de tarjeta
     if (!validateCardNumber(cardNumber)) {
@@ -50,27 +51,30 @@ function PaymentForm() {
 
     // Validación del monto
     if (!validateAmount(amount)) {
-      await handleFailedTransaction('Monto debe ser mayor a 5000');
+      await handleFailedTransaction('Monto debe ser mayor a 5000 CLP');
       return;
     }
 
     // Validación de fecha de expiración
-    if (!validateCardExpiry(expiryDate)) {
-      await handleFailedTransaction('Fecha de expiración inválida');
+    if (!validateCardExpiry(expirationDate)) {
+      await handleFailedTransaction('Fecha de expiración inválida o pasada');
       return;
     }
 
     // Si todas las validaciones pasan, realizar el pago
     try {
-      const result = await processPayment({ name, cardNumber, expiryDate, cvv, amount });
-      navigate('/success', { state: { data: result } });
+      const result = await processPayment({ name, cardNumber, expirationDate, cvv, amount });
+      if (result.status === 'fallida') {
+        navigate('/failure', { state: { reason: result.reason } });
+      } else {
+        navigate('/success', { state: { data: result } });
+      }
     } catch (error) {
       setError(error.message);
       navigate('/failure', { state: { reason: error.message } });
     }
   };
-  
-  
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
@@ -114,7 +118,7 @@ function PaymentForm() {
               <div className="relative mt-1">
                 <input
                   type="text"
-                  value={expiryDate}
+                  value={expirationDate}
                   onChange={(e) => setExpiryDate(e.target.value)}
                   className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="MM/YY"
@@ -165,7 +169,6 @@ function PaymentForm() {
       </div>
     </div>
   );
-  
 }
 
 export default PaymentForm;

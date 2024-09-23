@@ -2,34 +2,58 @@ import { useState, useEffect } from 'react';
 import { CreditCard, History, DollarSign, CheckCircle, TrendingUp, PieChart, AlertTriangle, ArrowRightLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { getTransactionHistory } from '../services/transactionService';
 
 export default function Dashboard() {
-  const [lastTransaction, setLastTransaction] = useState({
-    amount: 7500,
-    date: '2023-06-15',
-    status: 'success'
-  });
   const [totalTransactions, setTotalTransactions] = useState(0);
   const [averageTransaction, setAverageTransaction] = useState(0);
   const [successfulTransactions, setSuccessfulTransactions] = useState(0);
   const [failedTransactions, setFailedTransactions] = useState(0);
+  const [lastTransaction, setLastTransaction] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTotalTransactions(42);
-      setAverageTransaction(6000);
-      setSuccessfulTransactions(38);
-      setFailedTransactions(4);
-      setLoading(false);
-    }, 1000);
+    const fetchTransactions = async () => {
+      try {
+        const data = await getTransactionHistory();
 
-    return () => clearTimeout(timer);
+        const total = data.length;
+
+        const successful = data.filter(txn => txn.status === 'exitosa');
+        const failed = data.filter(txn => txn.status === 'fallida');
+
+        // Calcular el promedio de las transacciones exitosas
+        const average = successful.length > 0 
+          ? successful.reduce((sum, txn) => sum + parseFloat(txn.amount), 0) / successful.length 
+          : 0;
+
+        // Ordenar las transacciones por fecha para obtener la última
+        const lastTxn = data.sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+
+        setTotalTransactions(total);
+        setAverageTransaction(average.toFixed(0));
+        setSuccessfulTransactions(successful.length);
+        setFailedTransactions(failed.length);
+        setLastTransaction(lastTxn);
+      } catch (error) {
+        console.error('Error:', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
   }, []);
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
+  };
+
+  const formatLastTransactionDate = (date) => {
+    if (!date) return '';
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    return new Date(date).toLocaleDateString('es-ES', options);
   };
 
   return (
@@ -104,14 +128,18 @@ export default function Dashboard() {
                   <DollarSign className="h-8 w-8 text-blue-600" aria-hidden="true" />
                   <div className="ml-5 w-0 flex-1">
                     <h2 className="text-xl font-semibold text-gray-900 truncate">Última Transacción</h2>
-                    <p className="mt-1 text-2xl font-bold text-gray-900">${lastTransaction.amount.toLocaleString()} CLP</p>
+                    <p className="mt-1 text-2xl font-bold text-gray-900">
+                      ${lastTransaction?.amount?.toLocaleString()} CLP
+                    </p>
                   </div>
                 </div>
               </div>
               <div className="bg-blue-50 px-5 py-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-blue-700">{new Date(lastTransaction.date).toLocaleDateString()}</span>
-                  {lastTransaction.status === 'success' ? (
+                  <span className="text-sm font-medium text-blue-700">
+                    {formatLastTransactionDate(lastTransaction?.date)}
+                  </span>
+                  {lastTransaction?.status === 'exitosa' ? (
                     <div className="flex items-center text-green-700">
                       <CheckCircle className="h-5 w-5 mr-1" />
                       <span className="text-sm font-medium">Exitosa</span>

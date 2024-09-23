@@ -13,57 +13,47 @@ function PaymentForm() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Función para manejar transacciones fallidas
-  const handleFailedTransaction = async (reason) => {
+   const handleServerFailedTransaction = async (reason) => {
     try {
       await processPayment({ name, cardNumber, expirationDate, cvv, amount });
       navigate('/failure', { state: { reason } });
     } catch (error) {
-      console.error('Error al registrar la transacción fallida: ', error);
+      console.error('Error al registrar la transacción fallida en el servidor: ', error);
       setError('Error al registrar la transacción fallida');
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Verificar campos vacíos
+  
     if (!name || !cardNumber || !expirationDate || !cvv || !amount) {
       setError('Todos los campos son obligatorios');
       return;
     }
-
-    console.log('Datos enviados al backend:', { name, cardNumber, expirationDate, cvv, amount });
-
-    // Validación de tarjeta
+  
     if (!validateCardNumber(cardNumber)) {
       setError('Número de tarjeta inválido');
-      await handleFailedTransaction('Número de tarjeta inválido');
       return;
     }
-
     // Validación de CVV
     if (!validateCVV(cvv)) {
       setError('CVV inválido');
-      await handleFailedTransaction('CVV inválido');
       return;
     }
-
-    // Validación del monto
+  
     if (!validateAmount(amount)) {
-      await handleFailedTransaction('Monto debe ser mayor a 5000 CLP');
+      await handleServerFailedTransaction('Monto debe ser mayor a 5000 CLP');
       return;
     }
-
-    // Validación de fecha de expiración
+  
     if (!validateCardExpiry(expirationDate)) {
-      await handleFailedTransaction('Fecha de expiración inválida o pasada');
+      await handleServerFailedTransaction('Fecha de expiración inválida o pasada');
       return;
     }
-
-    // Si todas las validaciones pasan, realizar el pago
+  
     try {
       const result = await processPayment({ name, cardNumber, expirationDate, cvv, amount });
+  
       if (result.status === 'fallida') {
         navigate('/failure', { state: { reason: result.reason } });
       } else {

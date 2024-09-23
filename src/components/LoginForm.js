@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { UserIcon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
+  const [serverError, setServerError] = useState(''); // Para manejar errores del servidor
+  const navigate = useNavigate();  // Hook de navegación
 
   const validateForm = () => {
     const newErrors = { email: '', password: '' };
@@ -27,12 +30,35 @@ function LoginForm() {
     return !newErrors.email && !newErrors.password;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
-      // Aquí manejas el envío del formulario si es válido
-      console.log('Formulario enviado con éxito');
+      try {
+        const response = await fetch('http://192.168.0.25:4000/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          console.log('Inicio de sesión exitoso:', data);
+          // Guardar el token JWT en el almacenamiento local o en el estado de la app
+          localStorage.setItem('token', data.token);
+          navigate('/home');  // Aquí redirigimos al usuario a la página /home
+        } else {
+          setServerError(data.message || 'Error de autenticación');
+        }
+      } catch (error) {
+        setServerError('Error en la conexión con el servidor');
+      }
     }
   };
 

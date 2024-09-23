@@ -6,7 +6,7 @@ import { User, CreditCard, Calendar, Lock, DollarSign } from 'lucide-react';
 
 
 function PaymentForm() {
-  const [fullName, setFullName] = useState('');  // Nuevo estado para el nombre completo
+  const [name, setFullName] = useState('');  // Nuevo estado para el nombre completo
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -14,39 +14,55 @@ function PaymentForm() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Función para manejar transacciones fallidas
+  const handleFailedTransaction = async (reason) => {
+    try {
+      await processPayment({ name, cardNumber, expiryDate, cvv, amount });
+      navigate('/failure', { state: { reason } });
+    } catch (error) {
+      console.error('Error al registrar la transacción fallida: ', error);
+      setError('Error al registrar la transacción fallida');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Verificar campos vacíos
-    if (!fullName || !cardNumber || !expiryDate || !cvv || !amount) {
+    if (!name || !cardNumber || !expiryDate || !cvv || !amount) {
       setError('Todos los campos son obligatorios');
       return;
     }
-    
-    // Validaciones individuales
+
+    // Validación de tarjeta
     if (!validateCardNumber(cardNumber)) {
       setError('Número de tarjeta inválido');
+      await handleFailedTransaction('Número de tarjeta inválido');
       return;
     }
+
+    // Validación de CVV
     if (!validateCVV(cvv)) {
       setError('CVV inválido');
+      await handleFailedTransaction('CVV inválido');
       return;
     }
-    
+
     // Validación del monto
     if (!validateAmount(amount)) {
-      navigate('/failure', { state: { reason: 'Monto debe ser mayor a 5000' } });
+      await handleFailedTransaction('Monto debe ser mayor a 5000');
       return;
     }
-  
-    // Validación de la fecha de expiración
+
+    // Validación de fecha de expiración
     if (!validateCardExpiry(expiryDate)) {
-      navigate('/failure', { state: { reason: 'Fecha de expiración inválida' } });
+      await handleFailedTransaction('Fecha de expiración inválida');
       return;
     }
-  
+
+    // Si todas las validaciones pasan, realizar el pago
     try {
-      const result = await processPayment({ fullName, cardNumber, expiryDate, cvv, amount });
+      const result = await processPayment({ name, cardNumber, expiryDate, cvv, amount });
       navigate('/success', { state: { data: result } });
     } catch (error) {
       setError(error.message);
@@ -67,7 +83,7 @@ function PaymentForm() {
             <div className="relative mt-1">
               <input
                 type="text"
-                value={fullName}
+                value={name}
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Tu nombre completo"

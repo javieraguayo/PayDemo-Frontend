@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import PaymentPage from './pages/PaymentPage';
-import FailurePage from './pages/FailurePage';
+import FailurePage from './pages/FailurePage';  // Asegúrate de que esté importado
 import SuccessPage from './pages/SuccessPage';
 import HistoryPage from './pages/HistoryPage';
 import LoginForm from './components/LoginForm';
@@ -46,6 +46,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <HistoryPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/failure"
+            element={
+              <ProtectedRoute>
+                <FailurePage />
               </ProtectedRoute>
             }
           />

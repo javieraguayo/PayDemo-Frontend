@@ -1,20 +1,22 @@
 export async function processPayment(paymentData) {
-    try {
-      const response = await fetch('/pay', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(paymentData),
-      });
-  
-      if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.message || 'Error en el servidor');
-      }
-      return await response.json();
-    } catch (error) {
-      throw new Error(error.message || 'Error de red');
+  try {
+    const token = localStorage.getItem('token');
+
+    const response = await fetch('http://192.168.0.25:4000/pay', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(paymentData),
+    });
+
+    if (!response.ok) {
+      const result = await response.json();
+      throw new Error(result.message || 'Error en el servidor');
     }
+    return await response.json();
+  } catch (error) {
+    throw new Error(error.message || 'Error de red');
   }
-  
+}

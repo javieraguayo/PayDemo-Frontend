@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { UserIcon } from 'lucide-react';
+import { UserIcon, AlertTriangle } from 'lucide-react';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
-  const [serverError, setServerError] = useState(''); // Para manejar errores del servidor
+  const [serverError, setServerError] = useState('');
 
   const validateForm = () => {
     const newErrors = { email: '', password: '' };
@@ -17,7 +17,6 @@ function LoginForm() {
       newErrors.email = 'El formato de email es inválido';
     }
 
-    // Validación de contraseña
     if (!password) {
       newErrors.password = 'El campo de contraseña es obligatorio';
     } else if (password.length < 6) {
@@ -49,9 +48,13 @@ function LoginForm() {
         if (response.ok) {
           console.log('Inicio de sesión exitoso:', data);
           localStorage.setItem('token', data.token);
-          window.location.replace('/home'); 
+          window.location.replace('/home');
         } else {
-          setServerError(data.message || 'Error de autenticación');
+          if (data.message.includes('auth/invalid-credential')) {
+            setServerError('Credenciales inválidas, por favor intenta nuevamente.');
+          } else {
+            setServerError(data.message || 'Error de autenticación');
+          }
         }
       } catch (error) {
         setServerError('Error en la conexión con el servidor');
@@ -102,6 +105,16 @@ function LoginForm() {
             {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
           </div>
 
+          {/* Mensaje de error del servidor con ícono de advertencia */}
+          {serverError && (
+            <div className="mb-4 flex items-center bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg shadow-sm">
+              <AlertTriangle className="w-5 h-5 mr-2" />
+              <p className="text-sm">
+                {serverError}
+              </p>
+            </div>
+          )}
+
           <button
             type="submit"
             className="w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:ring focus:ring-indigo-500"
@@ -109,13 +122,11 @@ function LoginForm() {
             Iniciar Sesión
           </button>
           <p className="mt-4 text-center">
-          <span className="text-gray-600">
-            ¿No tienes una cuenta?{' '}
-          </span>
-          <a href="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
-            Regístrate aquí
-          </a>
-        </p>
+            <span className="text-gray-600">¿No tienes una cuenta?{' '}</span>
+            <a href="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
+              Regístrate aquí
+            </a>
+          </p>
         </form>
       </div>
     </div>

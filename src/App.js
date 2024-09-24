@@ -8,7 +8,8 @@ import SuccessPage from './pages/SuccessPage';
 import HistoryPage from './pages/HistoryPage';
 import LoginForm from './components/LoginForm';
 import HomePage from './pages/HomePage';
-import RegisterForm from './components/RegisterForm';  // Importar la página de registro
+import RegisterForm from './components/RegisterForm';
+import ErrorPage from './pages/ErrorPage';
 
 function App() {
   return (
@@ -61,7 +62,7 @@ function App() {
           />
 
           {/* Ruta por defecto */}
-          <Route path="*" element={<LoginForm />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Router>
     </AuthProvider>

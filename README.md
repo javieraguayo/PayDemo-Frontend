@@ -80,7 +80,6 @@ La estructura del proyecto sigue las mejores prácticas para aplicaciones React,
 │   ├── /assets                # Imágenes y otros recursos estáticos
 │   ├── /components            # Componentes React reutilizables
 │   │   ├── Dashboard.js       # Panel de control
-│   │   ├── ErrorPage.js       # Página de error
 │   │   ├── LoginForm.js       # Formulario de inicio de sesión
 │   │   ├── NavigationBar.js   # Barra de navegación
 │   │   ├── PaymentForm.js     # Formulario de pago
@@ -94,6 +93,7 @@ La estructura del proyecto sigue las mejores prácticas para aplicaciones React,
 │   │
 │   ├── /pages                 # Páginas principales de la aplicación
 │   │   ├── FailurePage.js     # Página de fallo de transacción
+│   │   ├── ErrorPage.js       # Página de error
 │   │   ├── HistoryPage.js     # Página del historial de transacciones
 │   │   ├── HomePage.js        # Página de inicio
 │   │   ├── PaymentPage.js     # Página de pago

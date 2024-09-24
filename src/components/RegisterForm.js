@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserIcon, CheckCircle, AlertTriangle } from 'lucide-react'; // Se añaden íconos
+import { UserIcon, CheckCircle, AlertTriangle, LoaderCircle } from 'lucide-react';
 
 function RegisterForm() {
   const [email, setEmail] = useState('');
@@ -7,7 +7,8 @@ function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '', confirmPassword: '' });
   const [serverError, setServerError] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // Estado para el mensaje de éxito
+  const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors = { email: '', password: '', confirmPassword: '' };
@@ -19,14 +20,12 @@ function RegisterForm() {
       newErrors.email = 'El formato de email es inválido';
     }
 
-    // Validación de contraseña
     if (!password) {
       newErrors.password = 'El campo de contraseña es obligatorio';
     } else if (password.length < 6) {
       newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
     }
 
-    // Validación de confirmación de contraseña
     if (password !== confirmPassword) {
       newErrors.confirmPassword = 'Las contraseñas no coinciden';
     }
@@ -39,6 +38,7 @@ function RegisterForm() {
     e.preventDefault();
 
     if (validateForm()) {
+      setLoading(true);
       try {
         const response = await fetch('http://192.168.0.25:4000/auth/register', {
           method: 'POST',
@@ -56,7 +56,6 @@ function RegisterForm() {
         if (response.ok) {
           setSuccessMessage('Registro exitoso. Redirigiendo al inicio de sesión...');
 
-          // Redirigir después de un pequeño retraso
           setTimeout(() => {
             window.location.replace('/login');
           }, 3000);
@@ -65,6 +64,8 @@ function RegisterForm() {
         }
       } catch (error) {
         setServerError('Error en la conexión con el servidor');
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -148,9 +149,13 @@ function RegisterForm() {
 
             <button
               type="submit"
-              className="w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:ring focus:ring-indigo-500"
+              className="w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:ring focus:ring-indigo-500 flex justify-center items-center"
             >
-              Registrarse
+              {loading ? (
+                <LoaderCircle className="w-5 h-5 animate-spin" />
+              ) : (
+                'Registrarse'
+              )}
             </button>
 
             <p className="mt-4 text-center">

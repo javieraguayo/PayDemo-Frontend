@@ -57,7 +57,7 @@ function PaymentForm() {
         amount: cleanedAmount 
       });
       
-      navigate('/failure', { state: { reason } });
+      navigate('/failure', { state: { reason, amount: `$${amount} CLP`, date: new Date().toLocaleString() } });
     } catch (error) {
       console.error('Error al registrar la transacción fallida en el servidor: ', error);
       setError('Error al registrar la transacción fallida');
@@ -112,7 +112,7 @@ function PaymentForm() {
     }
 
     if (reasons.length > 0) {
-      await handleServerFailedTransaction(reasons.join(' y '));
+      await handleServerFailedTransaction(reasons);
       return;
     }
   

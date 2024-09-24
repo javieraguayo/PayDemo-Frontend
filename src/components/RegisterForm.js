@@ -141,8 +141,8 @@ function RegisterForm() {
 
             {/* Mostrar error del servidor */}
             {serverError && (
-              <div className="flex items-center mt-2 text-red-600">
-                <AlertTriangle className="h-5 w-5 mr-1" />
+            <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-400 text-red-700 rounded-md flex items-center">
+                <AlertTriangle className="w-5 h-5 mr-2 text-red-600" />
                 <p className="text-sm">{serverError}</p>
               </div>
             )}

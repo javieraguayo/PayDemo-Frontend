@@ -111,11 +111,9 @@ function LoginForm() {
 
           {/* Mensaje de error del servidor con ícono de advertencia */}
           {serverError && (
-            <div className="mb-4 flex items-center bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg shadow-sm">
-              <AlertTriangle className="w-5 h-5 mr-2" />
-              <p className="text-sm">
-                {serverError}
-              </p>
+            <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-400 text-red-700 rounded-md flex items-center">
+              <AlertTriangle className="w-5 h-5 mr-2 text-red-600" />
+              <p className="text-sm">{serverError}</p>
             </div>
           )}
 

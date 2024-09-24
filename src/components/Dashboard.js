@@ -209,7 +209,7 @@ export default function Dashboard() {
               transition={{ duration: 0.3, delay: 0.5 }}
             >
               <div className="flex items-center mb-4">
-                <ArrowRightLeft className="h-8 w-8 text-green-600" aria-hidden="true" />
+                <ArrowRightLeft className="h-8 w-8 text-gray-600" aria-hidden="true" />
                 <div className="ml-5 w-0 flex-1">
                   <h2 className="text-xl font-semibold text-gray-900">Transacciones</h2>
                 </div>

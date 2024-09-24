@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { processPayment } from '../services/paymentService';
 import { validateCardNumber, validateCardExpiry, validateCVV, validateAmount } from '../utils/validation';
-import { User, CreditCard, Calendar, Lock, DollarSign } from 'lucide-react';
+import { User, CreditCard, Calendar, Lock, DollarSign, AlertCircle, LoaderCircle } from 'lucide-react';
 
 function PaymentForm() {
   const [name, setFullName] = useState('');  
@@ -89,11 +89,15 @@ function PaymentForm() {
     const reasons = []; // Array para acumular razones de fallo
 
     if (!validateCardNumber(cleanedCardNumber)) {
+      setError('Número de tarjeta inválido');
       reasons.push('Número de tarjeta inválido');
+      return;
     }
   
     if (!validateCVV(cvv)) {
+      setError('CVV inválido');
       reasons.push('CVV inválido');
+      return;
     }
 
     // Limpia el monto antes de enviarlo
@@ -107,9 +111,8 @@ function PaymentForm() {
       reasons.push('Fecha de expiración inválida o pasada');
     }
 
-    // Si hay razones de fallos acumuladas, llamamos a la función de fallos y paramos la ejecución
     if (reasons.length > 0) {
-      await handleServerFailedTransaction(reasons.join(' y ')); // Unimos las razones con "y"
+      await handleServerFailedTransaction(reasons.join(' y '));
       return;
     }
   
@@ -191,7 +194,7 @@ function PaymentForm() {
               <label className="block text-sm font-medium text-gray-700">CVV</label>
               <div className="relative mt-1">
                 <input
-                  type="text"
+                  type="number"
                   value={cvv}
                   onChange={(e) => setCvv(e.target.value)}
                   className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -218,6 +221,12 @@ function PaymentForm() {
             </div>
           </div>
 
+          {error && (
+            <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-400 text-red-700 rounded-md flex items-center">
+              <AlertCircle className="w-5 h-5 mr-2 text-red-600" />
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
   
           <button
             type="submit"
@@ -225,8 +234,6 @@ function PaymentForm() {
           >
             Pagar
           </button>
-  
-          {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
         </form>
       </div>
     </div>

@@ -127,7 +127,7 @@ export default function Dashboard() {
                   <div className="ml-5 w-0 flex-1">
                     <h2 className="text-xl font-semibold text-gray-900 truncate">Última Transacción</h2>
                     {lastTransaction ? (
-                      <p className="mt-1 text-2xl font-bold text-gray-900">${formatAmount(lastTransaction.amount)} CLP</p>
+                      <p className="mt-1 text-2xl font-bold text-gray-900">${formatAmount(lastTransaction.amount)}</p>
                     ) : (
                       <p className="mt-1 text-2xl font-bold text-gray-900">No disponible</p>
                     )}
@@ -196,7 +196,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="text-2xl font-bold text-gray-900 mt-2 text-center">
-                {loading ? <span className="animate-pulse bg-gray-200 h-8 w-24 rounded"></span> : `$${formatAmount(averageTransaction)} CLP`}
+                {loading ? <span className="animate-pulse bg-gray-200 h-8 w-24 rounded"></span> : `$${formatAmount(averageTransaction)}`}
               </div>
             </motion.div>
 

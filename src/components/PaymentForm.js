@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { processPayment } from '../services/paymentService';
 import { validateCardNumber, validateCardExpiry, validateCVV, validateAmount } from '../utils/validation';
-import { User, CreditCard, Calendar, Lock, DollarSign, AlertCircle, LoaderCircle } from 'lucide-react';
+import { User, CreditCard, Calendar, Lock, DollarSign, AlertCircle } from 'lucide-react';
 
 function PaymentForm() {
   const [name, setFullName] = useState('');  
@@ -104,7 +104,7 @@ function PaymentForm() {
     const cleanAmountValue = cleanAmount(amount);
 
     if (!validateAmount(cleanAmountValue)) {
-      reasons.push('Monto debe ser mayor a 5000 CLP');
+      reasons.push('Monto debe ser mayor a $5.000');
     }
   
     if (!validateCardExpiry(expirationDate)) {
@@ -152,6 +152,7 @@ function PaymentForm() {
                 onChange={(e) => setFullName(e.target.value)}
                 className="w-full px-4 py-3 pl-10 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Tu nombre completo"
+                maxLength={60}
               />
               <User className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
             </div>

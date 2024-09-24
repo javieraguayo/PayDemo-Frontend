@@ -86,7 +86,7 @@ function PaymentForm() {
     }
   
     const cleanedCardNumber = cleanCardNumber(cardNumber);
-    const reasons = []; // Array para acumular razones de fallo
+    const reasons = [];
 
     if (!validateCardNumber(cleanedCardNumber)) {
       setError('Número de tarjeta inválido');
@@ -100,7 +100,6 @@ function PaymentForm() {
       return;
     }
 
-    // Limpia el monto antes de enviarlo
     const cleanAmountValue = cleanAmount(amount);
 
     if (!validateAmount(cleanAmountValue)) {

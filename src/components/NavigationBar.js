@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Home, CreditCard as CreditCardIcon, History, LogOut, Menu, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';  // Importar useNavigate para redirigir al usuario
+import { useNavigate } from 'react-router-dom';
 
 export default function NavigationBar() {
   const [isOpen, setIsOpen] = useState(false);

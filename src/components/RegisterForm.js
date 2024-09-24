@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { UserIcon, CheckCircle, AlertTriangle, LoaderCircle } from 'lucide-react';
+import { register } from '../services/authService';
 
 function RegisterForm() {
   const [email, setEmail] = useState('');
@@ -40,30 +41,13 @@ function RegisterForm() {
     if (validateForm()) {
       setLoading(true);
       try {
-        const response = await fetch('http://192.168.0.25:4000/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          setSuccessMessage('Registro exitoso. Redirigiendo al inicio de sesión...');
-
-          setTimeout(() => {
-            window.location.replace('/login');
-          }, 3000);
-        } else {
-          setServerError(data.message || 'Error en el registro');
-        }
+        const data = await register(email, password);
+        setSuccessMessage('Registro exitoso. Redirigiendo al inicio de sesión...');
+        setTimeout(() => {
+          window.location.replace('/login');
+        }, 3000);
       } catch (error) {
-        setServerError('Error en la conexión con el servidor');
+        setServerError(error.message);
       } finally {
         setLoading(false);
       }

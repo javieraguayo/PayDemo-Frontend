@@ -1,10 +1,15 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { XCircle } from 'lucide-react'; // Icono de círculo con una "X"
+import { XCircle } from 'lucide-react';
 
 function FailurePage() {
   const location = useLocation();
-  const { reason } = location.state || { reason: 'Razón desconocida' };
+  let { reason } = location.state || { reason: 'Razón desconocida' };
+
+  if (!Array.isArray(reason)) {
+    reason = [reason];
+  }
+
   const navigate = useNavigate();
 
   return (
@@ -12,7 +17,15 @@ function FailurePage() {
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md text-center">
         <XCircle className="mx-auto h-16 w-16 text-red-500" />
         <h1 className="text-2xl font-bold text-gray-900 mt-4">Transacción Fallida</h1>
-        <p className="mt-1 text-gray-600">{reason}</p>
+        
+        {/* Mostrar las razones de la transacción fallida */}
+        <div className="mt-4 text-gray-600">
+          <ul>
+            {reason.map((r, index) => (
+              <li key={index} className="text-sm">{r}</li>  // Mostrar cada razón por separado
+            ))}
+          </ul>
+        </div>
 
         <button
           onClick={() => navigate('/payment')}

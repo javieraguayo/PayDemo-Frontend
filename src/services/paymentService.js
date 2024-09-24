@@ -1,7 +1,9 @@
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 export async function processPayment(paymentData) {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch('http://192.168.0.25:4000/pay', {
+    const response = await fetch(`${BASE_URL}/pay`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

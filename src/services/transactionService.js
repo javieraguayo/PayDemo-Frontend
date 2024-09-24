@@ -1,11 +1,13 @@
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 export async function getTransactionHistory() {
   try {
-    const response = await fetch('http://192.168.0.25:4000/transactions', {
+    const response = await fetch(`${BASE_URL}/transactions`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
     if (!response.ok) {

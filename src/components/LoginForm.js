@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { UserIcon, AlertTriangle } from 'lucide-react';
+import { UserIcon, AlertTriangle, LoaderCircle } from 'lucide-react';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ email: '', password: '' });
   const [serverError, setServerError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors = { email: '', password: '' };
@@ -31,6 +32,7 @@ function LoginForm() {
     e.preventDefault();
 
     if (validateForm()) {
+      setLoading(true);
       try {
         const response = await fetch('http://192.168.0.25:4000/auth/login', {
           method: 'POST',
@@ -58,6 +60,8 @@ function LoginForm() {
         }
       } catch (error) {
         setServerError('Error en la conexión con el servidor');
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -115,12 +119,18 @@ function LoginForm() {
             </div>
           )}
 
+          {/* Si loading está activo, mostrar el ícono de carga */}
           <button
             type="submit"
-            className="w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:ring focus:ring-indigo-500"
+            className="w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:ring focus:ring-indigo-500 flex justify-center items-center"
           >
-            Iniciar Sesión
+            {loading ? (
+              <LoaderCircle className="w-5 h-5 animate-spin" />
+            ) : (
+              'Iniciar Sesión'
+            )}
           </button>
+
           <p className="mt-4 text-center">
             <span className="text-gray-600">¿No tienes una cuenta?{' '}</span>
             <a href="/register" className="text-indigo-600 hover:text-indigo-700 font-medium">
